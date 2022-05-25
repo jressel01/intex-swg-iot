@@ -85,3 +85,5 @@ Now NodeRed ask every 30sec the esp
 
 
 Take the content from the yaml to a new Manuell element.
+
+![Dashboard integration](https://github.com/jressel01/intex-swg-iot/blob/919abdecc5d5e0c60420e988dabc0ae782009515/Home%20Assistant%20integration/Dashboard%20Sample.JPG)
