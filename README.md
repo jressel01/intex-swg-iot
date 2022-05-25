@@ -49,6 +49,7 @@ POST http://ip_addr:8080/api/v1/intex/swg/self_clean
 "time": "{6|10|12}"
 }
 }
+not testet yet
 
 - Get current status
 GET http://ip_addr:8080/api/v1/intex/swg/status
