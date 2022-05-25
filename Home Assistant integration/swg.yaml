@@ -1,0 +1,265 @@
+type: vertical-stack
+cards:
+  - type: vertical-stack
+    cards:
+      - type: picture-elements
+        image: /local/swg/back.png
+        elements:
+          - type: image
+            title: Current_Code
+            entity: binary_sensor.intexswg_working
+            image: /local/swg/currentcode.png
+            state_filter:
+              'off': brightness(10%) saturate(1)
+              'on': brightness(100%) saturate(1)
+            state_image:
+              'on': /local/swg/currentcode.png
+            style:
+              bottom: 52%
+              left: 48%
+          - type: state-label
+            title: Current_Code
+            entity: sensor.intexswg_current_code
+            style:
+              bottom: 62%
+              left: 48.5%
+              font-size: 70px
+              font-weight: bold
+              color: rgb(255, 0, 0)
+          - type: state-label
+            entity: input_text.blank
+            prefix: working
+            style:
+              bottom: 69.2%
+              left: 16.2%
+              color: rgb(0,0,0)
+              font-family: Quicksand
+              font-size: 100%
+              font-weight: bold
+              border-radius: 50%
+              text-align: center
+          - type: image
+            title: working
+            entity: binary_sensor.intexswg_working
+            image: /local/swg/ledg.png
+            state_filter:
+              'off': brightness(10%) saturate(1)
+              'on': brightness(100%) saturate(1)
+            state_image:
+              'on': /local/swg/ledg.png
+            style:
+              bottom: 80.5%
+              left: 16.2%
+          - type: state-label
+            entity: input_text.blank
+            prefix: boost
+            style:
+              bottom: 51.2%
+              left: 16.2%
+              color: rgb(0,0,0)
+              font-family: Quicksand
+              font-size: 100%
+              font-weight: bold
+              border-radius: 50%
+              text-align: center
+          - type: image
+            title: boost
+            entity: binary_sensor.intexswg_boost
+            image: /local/swg/ledg.png
+            state_filter:
+              'off': brightness(10%) saturate(1)
+              'on': brightness(100%) saturate(1)
+            state_image:
+              'on': /local/swg/ledg.png
+            style:
+              bottom: 62.5%
+              left: 16.2%
+          - type: state-label
+            entity: input_text.blank
+            prefix: sleep
+            style:
+              bottom: 32.2%
+              left: 16.2%
+              color: rgb(0,0,0)
+              font-family: Quicksand
+              font-size: 100%
+              font-weight: bold
+              border-radius: 50%
+              text-align: center
+          - type: image
+            title: sleep
+            entity: binary_sensor.intexswg_sleep
+            image: /local/swg/ledg.png
+            state_filter:
+              'off': brightness(10%) saturate(1)
+              'on': brightness(100%) saturate(1)
+            state_image:
+              'on': /local/swg/ledg.png
+            style:
+              bottom: 44.5%
+              left: 16.2%
+          - type: state-label
+            entity: input_text.blank
+            prefix: low_flow
+            style:
+              bottom: 74.2%
+              right: 10%
+              transform: none
+              color: rgb(0,0,0)
+              font-family: Quicksand
+              font-size: 100%
+              font-weight: bold
+              border-radius: 50%
+          - type: image
+            title: low_flow
+            entity: binary_sensor.intexswg_low_flow
+            image: /local/swg/ledr.png
+            state_filter:
+              'off': brightness(10%) saturate(1)
+              'on': brightness(100%) saturate(1)
+            state_image:
+              'on': /local/swg/ledr.png
+            style:
+              bottom: 80.5%
+              right: 13%
+          - type: state-label
+            entity: input_text.blank
+            prefix: low_salz
+            style:
+              bottom: 56.2%
+              right: 10%
+              transform: none
+              color: rgb(0,0,0)
+              font-family: Quicksand
+              font-size: 100%
+              font-weight: bold
+              border-radius: 50%
+          - type: image
+            title: low_salz
+            entity: binary_sensor.intexswg_low_salz
+            image: /local/swg/ledr.png
+            state_filter:
+              'off': brightness(10%) saturate(1)
+              'on': brightness(100%) saturate(1)
+            state_image:
+              'on': /local/swg/ledr.png
+            style:
+              bottom: 62.5%
+              right: 13%
+          - type: state-label
+            entity: input_text.blank
+            prefix: high_salz
+            style:
+              bottom: 37.2%
+              right: 10%
+              transform: none
+              color: rgb(0,0,0)
+              font-family: Quicksand
+              font-size: 100%
+              font-weight: bold
+              border-radius: 50%
+          - type: image
+            title: high_salz
+            entity: binary_sensor.intexswg_high_salz
+            image: /local/swg/ledr.png
+            state_filter:
+              'off': brightness(10%) saturate(1)
+              'on': brightness(100%) saturate(1)
+            state_image:
+              'on': /local/swg/ledr.png
+            style:
+              bottom: 44.5%
+              right: 13%
+          - type: state-label
+            entity: input_text.blank
+            prefix: service
+            style:
+              bottom: 18.2%
+              right: 10%
+              transform: none
+              color: rgb(0,0,0)
+              font-family: Quicksand
+              font-size: 100%
+              font-weight: bold
+              border-radius: 50%
+          - type: image
+            title: service
+            entity: binary_sensor.intexswg_service
+            image: /local/swg/ledr.png
+            state_filter:
+              'off': brightness(10%) saturate(1)
+              'on': brightness(100%) saturate(1)
+            state_image:
+              'on': /local/swg/ledr.png
+            style:
+              bottom: 26.5%
+              right: 13%
+          - type: image
+            title: Boost
+            entity: binary_sensor.intexswg_service
+            image: /local/swg/boost.png
+            state_filter:
+              'off': brightness(100%) saturate(1)
+              'on': brightness(100%) saturate(1)
+            state_image:
+              'on': /local/swg/boost.png
+            style:
+              bottom: 39%
+              left: 48.5%
+          - type: image
+            title: SelfClean
+            entity: binary_sensor.intexswg_service
+            image: /local/swg/selfclean.png
+            state_filter:
+              'off': brightness(100%) saturate(1)
+              'on': brightness(100%) saturate(1)
+            state_image:
+              'on': /local/swg/selfclean.png
+            style:
+              bottom: 2.0%
+              left: 48.5%
+          - type: image
+            title: Lock_Unlock
+            entity: binary_sensor.intexswg_service
+            image: /local/swg/lockunlock.png
+            state_filter:
+              'off': brightness(100%) saturate(1)
+              'on': brightness(100%) saturate(1)
+            state_image:
+              'on': /local/swg/lockunlock.png
+            style:
+              bottom: 19.7%
+              left: 33.4%
+          - type: image
+            title: Timer
+            entity: binary_sensor.intexswg_service
+            image: /local/swg/timer.png
+            state_filter:
+              'off': brightness(100%) saturate(1)
+              'on': brightness(100%) saturate(1)
+            state_image:
+              'on': /local/swg/timer.png
+            style:
+              bottom: 19.7%
+              left: 63.9%
+          - type: image
+            title: Power
+            entity: binary_sensor.intexswg_service
+            image: /local/swg/power.png
+            state_filter:
+              'off': brightness(100%) saturate(1)
+              'on': brightness(100%) saturate(1)
+            state_image:
+              'on': /local/swg/power.png
+            style:
+              bottom: 16.2%
+              left: 48.7%
+  - type: entities
+    entities:
+      - entity: input_button.intex_swg_standby
+      - entity: input_button.intexswg_on
+      - entity: input_button.intexswg_off
+      - entity: binary_sensor.intexswg_working
+      - entity: input_select.intexswg_mode
+      - entity: sensor.intexswg_power
+      - entity: input_boolean.intexswg_restapi
