@@ -25,7 +25,7 @@ extern "C" {
 #define dataPin         GPIO_NUM_18
 #define clockDispPin    GPIO_NUM_17
 #define dataDispPin     GPIO_NUM_16
-#define powerRelayPin   GPIO_NUM_0
+#define powerRelayPin   GPIO_NUM_2
 
 // Segment-bit: E D G F B A DP C
 #define DISP_BLANK  0b00000000

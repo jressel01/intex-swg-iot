@@ -5,6 +5,7 @@
 #include <iostream>
 #include "cJSON.h"
 
+
 #include "IntexSWG.h"
 #include "utils.h"
 #include "RestServer.h"
@@ -33,6 +34,7 @@ extern const uint8_t jquery_3_4_1_min_js_end[]   asm("_binary_jquery_3_4_1_min_j
 
 
 int8_t flash_status = 0;
+int8_t enableota = 0;
 
 EventGroupHandle_t reboot_event_group;
 const int REBOOT_BIT = BIT0;
@@ -227,6 +229,12 @@ static esp_err_t general_info_post_handler(httpd_req_t *req)
                 buttonStatus = BUTTON_POWER;   
                 responseStatus = true;
                 break;
+            case POWER_STATUS_BUS_ERROR:
+                keyCodeSetByAPI = true;
+                virtualPressButtonTime = 250;
+                buttonStatus = BUTTON_POWER;
+                responseStatus = true;   
+                break;
             default:
                 responseStatus = false;
         }        
@@ -262,6 +270,12 @@ static esp_err_t general_info_post_handler(httpd_req_t *req)
                 machinePower(true);
                 responseStatus = true;
                 break;
+            case POWER_STATUS_BUS_ERROR:
+                keyCodeSetByAPI = true;
+                virtualPressButtonTime = 250;
+                buttonStatus = BUTTON_POWER;
+                responseStatus = true;   
+                break;
             default:
                 responseStatus = false;
         } 
@@ -291,6 +305,101 @@ static esp_err_t general_info_post_handler(httpd_req_t *req)
 
     cJSON_Delete(root);
 
+    // Response
+    cJSON *responseRoot = cJSON_CreateObject();
+    cJSON *responseData = cJSON_CreateObject();    
+    cJSON_AddBoolToObject(responseData, "status", responseStatus);
+    cJSON_AddItemToObject(responseRoot, "data", responseData);
+    
+    const char *response = cJSON_Print(responseRoot);
+    httpd_resp_sendstr(req, response);
+    free((void *)response);
+    cJSON_Delete(responseRoot);
+
+    return ESP_OK;
+}
+
+static esp_err_t reboot_post_handler(httpd_req_t *req)
+{
+    bool responseStatus = false;
+    int remaining = req->content_len;
+    char buffer[100];
+    int received = 0;
+    if (remaining >= 100) {
+        /* Respond with 500 Internal Server Error */
+        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "content too long");
+        return ESP_FAIL;
+    }
+    while (remaining > 0) {
+        received = httpd_req_recv(req, buffer, remaining);
+        if (received <= 0) {
+            /* Respond with 500 Internal Server Error */
+            httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to post control value");
+            return ESP_FAIL;
+        }
+        remaining -= received;
+    }
+    cJSON *root = cJSON_Parse(buffer);
+    cJSON* cjson_data = cJSON_GetObjectItem(root, "data");
+    char* myreboot = cJSON_GetObjectItem(cjson_data, "reboot")->valuestring;
+    responseStatus=false; 
+    if (strcmp(myreboot, "yes") == 0) {
+        responseStatus=true; 
+        esp_restart();
+    }
+    
+    //esp_restart();
+    cJSON_Delete(root);
+    
+    // Response
+    cJSON *responseRoot = cJSON_CreateObject();
+    cJSON *responseData = cJSON_CreateObject();    
+    cJSON_AddBoolToObject(responseData, "status", responseStatus);
+    cJSON_AddItemToObject(responseRoot, "data", responseData);
+    
+    const char *response = cJSON_Print(responseRoot);
+    httpd_resp_sendstr(req, response);
+    free((void *)response);
+    cJSON_Delete(responseRoot);
+
+    return ESP_OK;
+}
+
+static esp_err_t enableota_post_handler(httpd_req_t *req)
+{
+    bool responseStatus = false;
+    int remaining = req->content_len;
+    char buffer[100];
+    int received = 0;
+    if (remaining >= 100) {
+        /* Respond with 500 Internal Server Error */
+        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "content too long");
+        return ESP_FAIL;
+    }
+    while (remaining > 0) {
+        received = httpd_req_recv(req, buffer, remaining);
+        if (received <= 0) {
+            /* Respond with 500 Internal Server Error */
+            httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to post control value");
+            return ESP_FAIL;
+        }
+        remaining -= received;
+    }
+    cJSON *root = cJSON_Parse(buffer);
+    cJSON* cjson_data = cJSON_GetObjectItem(root, "data");
+    char* myreboot = cJSON_GetObjectItem(cjson_data, "enableota")->valuestring;
+    responseStatus=false; 
+    if (strcmp(myreboot, "yes") == 0) {
+        enableota=1; 
+        responseStatus=true;
+    }
+    if (strcmp(myreboot, "no") == 0) {
+        enableota=0; 
+        responseStatus=false;
+    }
+    
+    cJSON_Delete(root);
+    
     // Response
     cJSON *responseRoot = cJSON_CreateObject();
     cJSON *responseData = cJSON_CreateObject();    
@@ -443,6 +552,21 @@ static const httpd_uri_t swg_status_post_uri = {
     .user_ctx = NULL
 };
 
+/* URI handler for power control */
+static const httpd_uri_t swg_reboot_post_uri = {
+    .uri = "/api/v1/intex/swg/reboot",
+    .method = HTTP_POST,
+    .handler = reboot_post_handler,
+    .user_ctx = NULL
+};
+
+static const httpd_uri_t swg_enableota_post_uri = {
+    .uri = "/api/v1/intex/swg/enableota",
+    .method = HTTP_POST,
+    .handler = enableota_post_handler,
+    .user_ctx = NULL
+};
+
 /* URI handler for self clean control */
 static const httpd_uri_t self_clean_post_uri = {
     .uri = "/api/v1/intex/swg/self_clean",
@@ -567,6 +691,7 @@ static esp_err_t OTA_update_status_handler(httpd_req_t *req)
 static esp_err_t OTA_update_post_handler(httpd_req_t *req)
 {
     ESP_LOGI("OTA", "Update handler called");
+    if(enableota==1){
     otaUpdating = true;
     
 	esp_ota_handle_t ota_handle; 
@@ -670,9 +795,11 @@ static esp_err_t OTA_update_post_handler(httpd_req_t *req)
 	{
 		ESP_LOGI("OTA", "\r\n\r\n !!! OTA End Error !!!");
 	}
-	
+    
 	return ESP_OK;
-
+    } else {
+        return ESP_FAIL;
+    }
 }
 
 
@@ -726,7 +853,7 @@ void start_rest_server(unsigned int port) {
     config.ctrl_port = 32769; 
     config.stack_size = 8192;
     //config.stack_size = 16384;
-    config.max_uri_handlers = 10;    
+    config.max_uri_handlers = 13;    
     config.lru_purge_enable = true;
 
     // Start the httpd server
@@ -737,7 +864,9 @@ void start_rest_server(unsigned int port) {
         httpd_register_uri_handler(server, &swg_status_get_uri);
         httpd_register_uri_handler(server, &swg_debug_get_uri);
         httpd_register_uri_handler(server, &swg_status_post_uri);
-        //httpd_register_uri_handler(server, &self_clean_post_uri);
+        httpd_register_uri_handler(server, &swg_reboot_post_uri);
+        httpd_register_uri_handler(server, &swg_enableota_post_uri);
+        httpd_register_uri_handler(server, &self_clean_post_uri);
         httpd_register_uri_handler(server, &display_post_uri);
         httpd_register_uri_handler(server, &wifi_config_delete_uri);
 
@@ -746,6 +875,7 @@ void start_rest_server(unsigned int port) {
 		httpd_register_uri_handler(server, &OTA_jquery_3_4_1_min_js);
 		httpd_register_uri_handler(server, &OTA_update);
 		httpd_register_uri_handler(server, &OTA_status);
+        //httpd_register_basic_auth(server);
     } 
     else {
         ESP_LOGI(TAG, "Error starting server!");

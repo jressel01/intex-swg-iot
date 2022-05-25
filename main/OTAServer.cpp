@@ -271,7 +271,6 @@ void start_OTA_webserver(unsigned int port)
 	
 	// Lets bump up the stack size (default was 4096)
 	config.stack_size = 8192;
-
 	config.ctrl_port = 32770;
 	config.lru_purge_enable = true;
 	

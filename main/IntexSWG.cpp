@@ -631,6 +631,8 @@ void startCore0b(void) {
         tskIDLE_PRIORITY + 3,   // Priority
         &xHandle2,              // Variable to hold the task's data structure.
         0);
+    module.clearDisplay();
+    module.setupDisplay(true, 4);
 }
 
 // Function that creates the superloop Core1 to be pinned at Core 1
@@ -735,4 +737,6 @@ extern "C" void app_main(void)
 
     startCore0a();    
     startCore0b();
+
+    
 }
