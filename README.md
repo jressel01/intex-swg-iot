@@ -1,5 +1,7 @@
 # Intex Salt Water Chlorine Generators (SWG) 
 
+You need SWG with 16Pin (TM1650) Chip on the Display Board. It will not work with the 18 Pin Pic. We work on it
+
 For this project, original cable between display board and main board will now be from display board to ESP32 board. You'll need a new cable to connect ESP32 board to the main board. This way the ESP32 will be in the middle of every comunication. For the new cable I used a NEMA17 motor cable (the one that 3D printers use) as I had several ones at home, and one connector fits what I need, so only have to change the other connector from this cable.
 
 ## For the circuit you'll need:
