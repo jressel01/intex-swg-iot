@@ -68,3 +68,20 @@ POST http://ip_addr:8080/api/v1/intex/swg/enableota
 }
 
 http://ip_addr:8080
+
+## Home Assistant integration.
+
+NodeRed create the sensor and switches and send the Data from Restapi to MQTT
+
+copy swg folder from www to have the Pictures
+Add nodered flow and change the ip for the SWG_ESP and take your Homeassistant and MQTT connection
+
+1. Inject "Create Sensor Switch"
+2. Inject "Activate MQTT sensor"
+
+Home Assistant have now a new MQTT Device.
+
+Now NodeRed ask every 30sec the esp
+
+
+Take the content from the yaml to a new Manuell element.
