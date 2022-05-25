@@ -1,0 +1,45 @@
+POST http://192.168.178.182:8080/api/v1/intex/swg/reboot
+Content-Type: application/json
+{
+    "data": {
+    "reboot": "yes"
+    }
+}
+
+###    
+POST http://192.168.178.182:8080/api/v1/intex/swg
+Content-Type: application/json
+{
+    "data": {
+    "power": "standby"
+    }
+}
+###
+{on|off|standby}
+
+###    
+GET http://192.168.178.182:8080/api/v1/intex/swg/status
+
+### 
+GET http://192.168.178.182:8080/api/v1/intex/swg/debug
+
+### 
+POST http://192.168.178.182:8080/api/v1/intex/swg/self_clean
+Content-Type: application/json
+{
+    "data": {
+    "time": ""
+    }
+}
+
+###
+{6|10|12}
+###
+POST http://192.168.178.182:8080/api/v1/intex/swg/enableota
+Content-Type: application/json
+
+{
+    "data": {
+    "enableota": "no"
+    }
+}
