@@ -1,52 +1,69 @@
-# Hello World Example
+# Intex Salt Water Chlorine Generators (SWG) 
 
-Starts a FreeRTOS task to print "Hello World".
+For this project, original cable between display board and main board will now be from display board to ESP32 board. You'll need a new cable to connect ESP32 board to the main board. This way the ESP32 will be in the middle of every comunication. For the new cable I used a NEMA17 motor cable (the one that 3D printers use) as I had several ones at home, and one connector fits what I need, so only have to change the other connector from this cable.
 
-(See the README.md file in the upper level 'examples' directory for more information about examples.)
+## For the circuit you'll need:
 
-## How to use example
+- ESP32
+- Relay module
+- Power supply, I used 5V, but you can use 3.3V instead (wiring is different!)
+- 2x Female and 1x Male XH2.54 4pin connectors (they are the most similar I've found that fits original cable)
+- Level shifter as the logic from ESP32 is 3.3V and the SWG logic is 5V.
+- Fuse for the power supply (optional)
+- NEMA17 cable (I used this because I had several ones at home, but you can use whatever you have or you can buy)
 
-Follow detailed instructions provided specifically for this example. 
+## For the wiring, take into account the ESP32 pins:
 
-Select the instructions depending on Espressif chip installed on your development board:
+- GPIO 19 -> SWG main board clock
+- GPIO 18 -> SWG main board data
+- GPIO 17 -> Display board clock
+- GPIO 16 -> Display board data
+- GPIO 2 -> Relay module control
 
-- [ESP32 Getting Started Guide](https://docs.espressif.com/projects/esp-idf/en/stable/get-started/index.html)
-- [ESP32-S2 Getting Started Guide](https://docs.espressif.com/projects/esp-idf/en/latest/esp32s2/get-started/index.html)
+PCB Layout https://github.com/jingsno/intex-swg-pcb-TM1650 (Change Relay pin from GPIO0 to GPIO2)
 
+## RestAPI
 
-## Example folder contents
+For the API to control the system there are some endpoints that you could check in the code.
+Basic API calls are the following:
+- Control the machine
+POST http://ip_addr:8080/api/v1/intex/swg
+{
+"data": {
+"power": "{on|off|standby}"
+}
+}
 
-The project **hello_world** contains one source file in C language [hello_world_main.c](main/hello_world_main.c). The file is located in folder [main](main).
+- Reboot ESP
+POST http://ip_addr:8080/api/v1/intex/swg/reboot
+{
+"data": {
+"reboot": "yes"
+}
+}
 
-ESP-IDF projects are build using CMake. The project build configuration is contained in `CMakeLists.txt` files that provide set of directives and instructions describing the project's source files and targets (executable, library, or both). 
+- selfclean
+POST http://ip_addr:8080/api/v1/intex/swg/self_clean
+{
+"data": {
+"time": "{6|10|12}"
+}
+}
 
-Below is short explanation of remaining files in the project folder.
+- Get current status
+GET http://ip_addr:8080/api/v1/intex/swg/status
 
-```
-├── CMakeLists.txt
-├── example_test.py            Python script used for automated example testing
-├── main
-│   ├── CMakeLists.txt
-│   ├── component.mk           Component make file
-│   └── hello_world_main.c
-├── Makefile                   Makefile used by legacy GNU Make
-└── README.md                  This is the file you are currently reading
-```
+- Get current debug
+GET http://ip_addr:8080/api/v1/intex/swg/debug
 
-For more information on structure and contents of ESP-IDF projects, please refer to Section [Build System](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-guides/build-system.html) of the ESP-IDF Programming Guide.
+## OTA Update
 
-## Troubleshooting
+- Enable OTA
+POST http://ip_addr:8080/api/v1/intex/swg/enableota
+{
+"data": {
+"enableota": "yes"
+}
+}
 
-* Program upload failure
-
-    * Hardware connection is not correct: run `idf.py -p PORT monitor`, and reboot your board to see if there are any output logs.
-    * The baud rate for downloading is too high: lower your baud rate in the `menuconfig` menu, and try again.
-
-## Technical support and feedback
-
-Please use the following feedback channels:
-
-* For technical queries, go to the [esp32.com](https://esp32.com/) forum
-* For a feature request or bug report, create a [GitHub issue](https://github.com/espressif/esp-idf/issues)
-
-We will get back to you as soon as possible.
+http://ip_addr:8080
